@@ -10,6 +10,7 @@ public class bluescan extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Some change here
         setContentView(R.layout.activity_bluescan);
     }
 }
