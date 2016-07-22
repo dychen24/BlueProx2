@@ -32,6 +32,7 @@ import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -88,7 +89,6 @@ public class bluescan extends AppCompatActivity implements SensorEventListener {
     double velo_filtered=0;
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -120,7 +120,10 @@ public class bluescan extends AppCompatActivity implements SensorEventListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Some change here
+        // initialize viewer
+        accelerate = (EditText) findViewById(R.id.main_et_accelerate);
+        gyro = (EditText) findViewById(R.id.main_et_gyro);
+
         setContentView(R.layout.activity_bluescan);
     }
 
@@ -130,6 +133,22 @@ public class bluescan extends AppCompatActivity implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event){
+        float[] values = event.values;
+
+        switch (event.sensor.getType()) {
+            case Sensor.TYPE_LINEAR_ACCELERATION:
+                accelerometerValues = values;
+                DecimalFormat df=new DecimalFormat("0.0");
+                accelerate.setText(df.format(accelerometerValues[0]) + "a/m");
+                break;
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                magneticFieldValues = values;
+                break;
+            case Sensor.TYPE_GYROSCOPE:
+                gyroValues = values;
+                gyro.setText("Gyro(X): " + gyroValues[0]);
+                break;
+        }
 
     }
 }
