@@ -1,5 +1,9 @@
 package com.chendy.blueprox;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.location.LocationManager;
@@ -10,10 +14,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 
-import android.os.CountDownTimer;
-import android.os.Looper;
-import android.os.Handler;
-import android.os.Vibrator;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,13 +24,6 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.text.method.ScrollingMovementMethod;
-import android.util.DisplayMetrics;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -44,16 +37,17 @@ import java.util.concurrent.locks.ReentrantLock;
 public class bluescan extends AppCompatActivity implements SensorEventListener {
 
     /*
-     * Initialize parameters:
+     * Initialize sensor parameters:
      */
     private SensorManager mSensorManager = null;
     private LocationManager locationManager;
     float[] accelerometerValues = new float[3];
     float[] magneticFieldValues = new float[3];
-    float[] orientationValues = new float[3];
-    float[] gravityValues = new float[3];
     static int detection_length = 50;
     float[] gyroValues = new float[detection_length];
+
+    // Initiate Bluetooth parameters:
+    BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 
     static float[] acc_i = new float[detection_length];
     static float[] acc_x = new float[detection_length];
@@ -88,6 +82,51 @@ public class bluescan extends AppCompatActivity implements SensorEventListener {
     double velo = 0;
     double velo_filtered=0;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_bluescan);
+        // initialize viewer
+        accelerate = (EditText) findViewById(R.id.main_et_accelerate);
+        gyro = (EditText) findViewById(R.id.main_et_gyro);
+        syslog = (EditText) findViewById(R.id.main_et_syslog);
+
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+        // Initiate scanning process:
+        IntentFilter filter = new IntentFilter();
+
+        filter.addAction(BluetoothDevice.ACTION_FOUND);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+
+        registerReceiver(mReceiver, filter);
+        adapter.startDiscovery();
+    }
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            System.out.println("I'm HERE!!!");
+
+            if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
+                // Show progress dialog
+            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                // Dismiss progress dialog
+            } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                //Bluetooth devices found:
+                BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
+                syslog.getText().append("Found device: " + device.getName());
+
+            } else {
+                System.out.println("Blue not found");
+
+            }
+        }
+    };
 
     @Override
     protected void onResume() {
@@ -118,14 +157,25 @@ public class bluescan extends AppCompatActivity implements SensorEventListener {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // initialize viewer
-        accelerate = (EditText) findViewById(R.id.main_et_accelerate);
-        gyro = (EditText) findViewById(R.id.main_et_gyro);
-
-        setContentView(R.layout.activity_bluescan);
+    protected void onPause() {
+        super.onPause();
+        mSensorManager.unregisterListener(this);
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mReceiver);
+        super.onDestroy();
+
+    }
+
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -138,15 +188,17 @@ public class bluescan extends AppCompatActivity implements SensorEventListener {
         switch (event.sensor.getType()) {
             case Sensor.TYPE_LINEAR_ACCELERATION:
                 accelerometerValues = values;
-                DecimalFormat df=new DecimalFormat("0.0");
-                accelerate.setText(df.format(accelerometerValues[0]) + "a/m");
+                DecimalFormat df=new DecimalFormat("0.00");
+                accelerate.setText("Acc(X): " + df.format(accelerometerValues[0]) + " a/m");
+                //syslog.getText().append("\nAcc" + accelerometerValues[0]+" ,"+accelerometerValues[1]+" ,"+accelerometerValues[2]);
                 break;
             case Sensor.TYPE_MAGNETIC_FIELD:
                 magneticFieldValues = values;
                 break;
             case Sensor.TYPE_GYROSCOPE:
                 gyroValues = values;
-                gyro.setText("Gyro(X): " + gyroValues[0]);
+                DecimalFormat df2=new DecimalFormat("0.00");
+                gyro.setText("Gyro(X): " + df2.format(gyroValues[0]));
                 break;
         }
 

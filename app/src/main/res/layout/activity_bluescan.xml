@@ -1,34 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.chendy.blueprox.bluescan">
+    android:orientation="vertical" >
 
     <EditText
         android:id="@+id/main_et_accelerate"
-        android:layout_columnSpan="4"
-        android:layout_width="match_parent"
-        android:layout_height="18dp"
-        android:background="#00274c"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:editable="false"
         android:gravity="center"
         android:text="accelerometerValues"
-        android:textColor="#ffcb05"
-        android:typeface="serif" />
+        android:textColor="#ffcb05" />
     <EditText
         android:id="@+id/main_et_gyro"
-        android:layout_columnSpan="2"
-        android:layout_width="180dp"
-        android:layout_height="18dp"
-        android:background="#59983b"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:editable="false"
         android:gravity="center"
         android:text="magnetic X"
-        android:textColor="#ffffff" />
+        android:textColor="#ffcb20" />
+    <Button android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BT Scan" />
+    <EditText
+        android:id="@+id/main_et_syslog"
+        android:layout_columnSpan="2"
+        android:layout_rowSpan="2"
+        android:layout_width="match_parent"
+        android:layout_height="266dp"
+        android:background="#711352"
+        android:clickable="true"
+        android:editable="false"
+        android:focusable="false"
+        android:maxLines="17"
+        android:padding="5px"
+        android:scrollbars="vertical"
+        android:singleLine="false"
+        android:text="syslog"
+        android:textColor="#ffffff"
+        android:textSize="12sp" />
 
-</RelativeLayout>
+</LinearLayout>
+    <!--android:background="#00274c"-->
