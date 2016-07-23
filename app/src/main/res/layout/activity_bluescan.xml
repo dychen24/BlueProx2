@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_gravity="center"
+    android:columnCount="4"
+    android:orientation="horizontal" >
 
     <EditText
         android:id="@+id/main_et_accelerate"
+        android:layout_columnSpan="2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:editable="false"
@@ -14,6 +17,7 @@
         android:textColor="#ffcb05" />
     <EditText
         android:id="@+id/main_et_gyro"
+        android:layout_columnSpan="2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:editable="false"
@@ -29,18 +33,24 @@
         android:layout_columnSpan="2"
         android:layout_rowSpan="2"
         android:layout_width="match_parent"
-        android:layout_height="266dp"
+        android:layout_height="240dp"
         android:background="#711352"
         android:clickable="true"
         android:editable="false"
         android:focusable="false"
-        android:maxLines="17"
+        android:maxLines="15"
         android:padding="5px"
         android:scrollbars="vertical"
         android:singleLine="false"
         android:text="syslog"
         android:textColor="#ffffff"
         android:textSize="12sp" />
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_columnSpan="4"
+        android:layout_width="fill_parent"
+        android:layout_height="266dp"
+        android:layout_weight="1.00"
+        android:src="@drawable/illustration" />
 
-</LinearLayout>
-    <!--android:background="#00274c"-->
+</GridLayout>    <!--android:background="#00274c"-->
