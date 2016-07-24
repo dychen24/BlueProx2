@@ -113,18 +113,22 @@ public class bluescan extends AppCompatActivity implements SensorEventListener {
 
             if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
                 // Show progress dialog
+                System.out.println("Discovery Started");
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 // Dismiss progress dialog
+                System.out.println("Discovery Finished");
             } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 //Bluetooth devices found:
                 BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
                 syslog.getText().append("Found device: " + device.getName());
+                System.out.println("Found Device: " + device.getName());
 
             } else {
                 System.out.println("Blue not found");
 
             }
+            System.out.println("Now I'm here");
         }
     };
 
